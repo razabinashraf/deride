@@ -1,44 +1,9 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/raza/projects/uber/deride2/contracts/Lock.sol": {
-      "lastModificationDate": 1668494120233,
-      "contentHash": "ae66265769cc28ebdaa34881df95bc5e",
-      "sourceName": "contracts/Lock.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.9"
-      ],
-      "artifacts": [
-        "Lock"
-      ]
-    },
     "/Users/raza/projects/uber/deride2/contracts/deride.sol": {
-      "lastModificationDate": 1668495171117,
-      "contentHash": "943eb22e246f96751a047ee35fe9382a",
+      "lastModificationDate": 1669232758353,
+      "contentHash": "4d404c0ec051109497cca7b17fc6bf4d",
       "sourceName": "contracts/deride.sol",
       "solcConfig": {
         "version": "0.8.17",
