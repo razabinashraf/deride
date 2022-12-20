@@ -1,10 +1,14 @@
 pragma solidity 0.8.17;
+import "./drdtoken.sol";
+ 
 
 contract Deride{
     // Stores the status of the user
     enum Status {INACTIVE, RIDER, DRIVER,ONRIDE}
 
-    event RiderDetails(uint riderNumber);
+    address private drdTokenAddress;
+
+    event RiderDetails(uint[] WaitingRiders);
     // event used to inform rider that he/she has been picked up
     event RiderPicked(uint riderNumber); 
     // Struct used to store all information related to a user
@@ -13,13 +17,37 @@ contract Deride{
         uint number;
         Status state;
     }
-
+    uint[] WaitingRiders;
     // Maps user ethrium address to user struct
     mapping (address => user) public users;
     // List of user adress
     address [] public userList;
 
+    // import "./Records.sol";
+    // address private RecordsAddress;
     
+    // function getRepaymentData(string memory loanId)
+    //     Records recordsAddress = Records(RecordsAddress);
+
+    //         return (recordsAddress.getRepaymentData(loanId));
+    //     }
+    function transferDRD(address to,uint amount)
+        public
+    {
+        DerideToken drd = DerideToken(drdTokenAddress);
+        drd.transfer(to, amount);
+    }
+    
+    function setDRDtokenAddress(address DRDContractAddress)
+        external
+    {
+        require(
+            DRDContractAddress != address(0),
+            "Invalid Contract Address"
+        );
+        drdTokenAddress = DRDContractAddress;
+    }
+
     function driveRequest() public{
         // Function used to update/add user details when user signs on to the application as driver
         if(users[msg.sender].isUser == false){
@@ -54,9 +82,10 @@ contract Deride{
         require(users[msg.sender].state==Status.DRIVER, "User needs to be in driver mode to pick rider");
         for (uint i=0; i<userList.length; i++) {
             if (users[userList[i]].state == Status.RIDER){
-                emit RiderDetails(users[userList[i]].number);
+                WaitingRiders.push(users[userList[i]].number);
             }
         }
+        emit RiderDetails((WaitingRiders));
     }
 
     function acceptRequest(uint riderNumber) public{
@@ -79,5 +108,11 @@ contract Deride{
 
         users[msg.sender].state = Status.INACTIVE;
         users[userList[riderNumber]].state == Status.INACTIVE;
+    }
+
+    function cancelRideRequest() public {
+        require(users[msg.sender].state==Status.RIDER, "User need to request a drive before cancelling");
+        users[msg.sender].state = Status.INACTIVE;
+        //TODO: Charge penalty for the rider
     }
 }
