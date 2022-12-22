@@ -1,6 +1,5 @@
 pragma solidity 0.8.17;
 import "./drdtoken.sol";
- 
 
 contract Deride{
     // Stores the status of the user
@@ -22,15 +21,7 @@ contract Deride{
     mapping (address => user) public users;
     // List of user adress
     address [] public userList;
-
-    // import "./Records.sol";
-    // address private RecordsAddress;
     
-    // function getRepaymentData(string memory loanId)
-    //     Records recordsAddress = Records(RecordsAddress);
-
-    //         return (recordsAddress.getRepaymentData(loanId));
-    //     }
     function transferDRD(address to,uint amount)
         public
     {
@@ -50,6 +41,7 @@ contract Deride{
 
     function driveRequest() public{
         // Function used to update/add user details when user signs on to the application as driver
+        
         if(users[msg.sender].isUser == false){
             userList.push(msg.sender);
             users[msg.sender] = user({
@@ -62,8 +54,9 @@ contract Deride{
         }
     }
 
-    function rideRequest() public {
+    function rideRequest(uint cost) public {
         // Function used to update/add user details when user signs on to the application as rider
+        DerideToken drd = DerideToken(drdTokenAddress);
         if(users[msg.sender].isUser == false){
             userList.push(msg.sender);
             users[msg.sender] = user({
@@ -74,6 +67,7 @@ contract Deride{
         }else{
             users[msg.sender].state = Status.RIDER;
         }
+        drd.transferFrom(msg.sender, address(this), cost);
     }
 
     function showAllRequests() public{
@@ -89,7 +83,6 @@ contract Deride{
     }
 
     function acceptRequest(uint riderNumber) public{
-        // pairs rider and driver and informs rider of driver arrival time
         require(users[msg.sender].isUser==true, "Need to be a user to select rider");
         require(users[msg.sender].state==Status.DRIVER, "User needs to be in driver mode to pick rider");
         require(userList[riderNumber] != msg.sender, "Cannot pick yourself");
@@ -101,18 +94,22 @@ contract Deride{
         emit RiderPicked(riderNumber);
     }
 
-    function markRideCompleted(uint riderNumber) public {
+    function markRideCompleted(uint riderNumber, uint cost) public {
         require(users[msg.sender].isUser==true, "Need to be a user first");
         require(users[msg.sender].state==Status.ONRIDE,"Driver needs to be on ride first");
         require(users[userList[riderNumber]].state == Status.ONRIDE, "Rider should be on ride first");
 
+        //transfer 85% of travel cost to the driver
+        transferDRD(msg.sender,cost*10**18*85/100);
         users[msg.sender].state = Status.INACTIVE;
         users[userList[riderNumber]].state == Status.INACTIVE;
     }
 
-    function cancelRideRequest() public {
+    function cancelRideRequest(uint cost) public {
         require(users[msg.sender].state==Status.RIDER, "User need to request a drive before cancelling");
         users[msg.sender].state = Status.INACTIVE;
-        //TODO: Charge penalty for the rider
+
+        //Transferring only 95% of travel cost back to user as penalty.
+        transferDRD(msg.sender, cost*10**18*95/100);
     }
 }
