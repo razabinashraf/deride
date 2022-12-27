@@ -1,21 +1,43 @@
-import './App.css';
-import {ethers} from 'ethers'
-import abi from '../artifacts/contracts/deride.sol/Deride.json'
-const { ethereum }= window;
+import { TransactionContext } from './context/TransactionContext';
+import React,{ useContext } from 'react';
+import axios from 'axios';
+const App = () => {
+  const {driveRequest} = useContext(TransactionContext);
 
-function App() {
+  const handledriveRequest = () => {
+    console.log(typeof(driveRequest));
+    driveRequest();
+  }
 
-  const getEthereumContract= ()=>{
-    const contractAddress = '0xd9145CCE52D386f254917e481eB44e9943F39138'
-    const provider= new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    const contract= new ethers.Contract(contractAddress,abi,signer);
+  const Send_post_Request = () => {
 
-    return contract;
-}
+    const data = {
+      "collection": "user_details",
+    "database": "deride",
+    "dataSource": "Cluster0",
+    "filter": {
+      "name":"raza"
+    }
+    }
+    const headers = {
+      'Content-Type': 'application/json',
+      'Access-Control-Request-Headers': '*',
+      'api-key': '10jdhq5Q6ii3QpeioTLBAk3uSdYBpzkwHiqpuIdF2YeW323dThHOPrTBXdZLRcOu', 
+    }
+    
+    axios.post('https://cors-anywhere.herokuapp.com/https://data.mongodb-api.com/app/data-wzgqf/endpoint/data/v1/action/findOne', data, {
+        headers: headers
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
   return (
     <div className="App">
-      <button onClick={async() =>{
+      {/* <button onClick={async() =>{
         if(window.ethereum) {
           const provider = new ethers.providers.Web3Provider(window.ethereum);
           const signer = provider.getSigner();
@@ -24,16 +46,10 @@ function App() {
           console.log(sign,signer.getAddress())
         }
       }
-      }>Connect Wallet</button>
+      }>Connect Wallet</button> */}
 
-      <button onClick={async() =>{
-        if(window.ethereum) {
-          const contract = getEthereumContract();
-          const transact = await contract.driveRequest(); 
-        }
-      }
-      }>Request drive</button>
-
+      <button onClick={handledriveRequest}>Drive Request</button>
+      <button onClick={Send_post_Request}>POSt data</button>
     </div>
   );
 }
