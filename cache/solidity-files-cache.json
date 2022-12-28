@@ -1,41 +1,6 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/raza/projects/uber/deride2/contracts/deride.sol": {
-      "lastModificationDate": 1671021772780,
-      "contentHash": "96c928680be8b3c4010741b1a62b8ac2",
-      "sourceName": "contracts/deride.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "0.8.17"
-      ],
-      "artifacts": [
-        "Deride"
-      ]
-    },
     "/Users/raza/projects/uber/deride2 copy/contracts/DAOgovernance.sol": {
       "lastModificationDate": 1670765657551,
       "contentHash": "d1ad3b7c70e7553297110605b42c3c8f",
@@ -1383,47 +1348,6 @@
         "Deride"
       ]
     },
-    "/Users/raza/projects/uber/deride2/contracts/DAOgovernance.sol": {
-      "lastModificationDate": 1670849879511,
-      "contentHash": "d1ad3b7c70e7553297110605b42c3c8f",
-      "sourceName": "contracts/DAOgovernance.sol",
-      "solcConfig": {
-        "version": "0.8.17",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/governance/Governor.sol",
-        "@openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo.sol",
-        "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol",
-        "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
-        "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.2"
-      ],
-      "artifacts": [
-        "MyGovernor"
-      ]
-    },
     "/Users/raza/projects/uber/deride2/node_modules/@openzeppelin/contracts/governance/Governor.sol": {
       "lastModificationDate": 1670849883622,
       "contentHash": "bbb046a0e771ab9863343dadde1072ae",
@@ -2656,6 +2580,47 @@
         "IERC20Metadata"
       ]
     },
+    "/Users/raza/projects/uber/deride2/contracts/DAOgovernance.sol": {
+      "lastModificationDate": 1670849879511,
+      "contentHash": "d1ad3b7c70e7553297110605b42c3c8f",
+      "sourceName": "contracts/DAOgovernance.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/governance/Governor.sol",
+        "@openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo.sol",
+        "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol",
+        "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
+        "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.2"
+      ],
+      "artifacts": [
+        "MyGovernor"
+      ]
+    },
     "/Users/raza/projects/uber/deride2/contracts/drdtoken.sol": {
       "lastModificationDate": 1670849879511,
       "contentHash": "e3a880d119de00fc80813282299ae773",
@@ -2693,6 +2658,43 @@
       ],
       "artifacts": [
         "DerideToken"
+      ]
+    },
+    "/Users/raza/projects/uber/deride2/contracts/deride.sol": {
+      "lastModificationDate": 1671903961328,
+      "contentHash": "ad7f6982569fd8c84ac75141ad64249e",
+      "sourceName": "contracts/deride.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./drdtoken.sol"
+      ],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "Deride"
       ]
     }
   }

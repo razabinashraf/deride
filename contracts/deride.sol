@@ -74,12 +74,13 @@ contract Deride{
         // returns list of waiting riders to a driver
         require(users[msg.sender].isUser==true, "Need to be a user to select rider");
         require(users[msg.sender].state==Status.DRIVER, "User needs to be in driver mode to pick rider");
+        delete WaitingRiders;
         for (uint i=0; i<userList.length; i++) {
             if (users[userList[i]].state == Status.RIDER){
                 WaitingRiders.push(users[userList[i]].number);
             }
         }
-        emit RiderDetails((WaitingRiders));
+        emit RiderDetails(WaitingRiders);
     }
 
     function acceptRequest(uint riderNumber) public{
@@ -89,7 +90,7 @@ contract Deride{
         require(users[userList[riderNumber]].state == Status.RIDER, "user being picked has to be a rider");
         
         users[msg.sender].state = Status.ONRIDE;
-        users[userList[riderNumber]].state == Status.ONRIDE;
+        users[userList[riderNumber]].state = Status.ONRIDE;
 
         emit RiderPicked(riderNumber);
     }
@@ -100,7 +101,7 @@ contract Deride{
         require(users[userList[riderNumber]].state == Status.ONRIDE, "Rider should be on ride first");
 
         //transfer 85% of travel cost to the driver
-        transferDRD(msg.sender,cost*10**18*85/100);
+        transferDRD(msg.sender,cost*85/100);
         users[msg.sender].state = Status.INACTIVE;
         users[userList[riderNumber]].state == Status.INACTIVE;
     }
@@ -110,6 +111,18 @@ contract Deride{
         users[msg.sender].state = Status.INACTIVE;
 
         //Transferring only 95% of travel cost back to user as penalty.
-        transferDRD(msg.sender, cost*10**18*95/100);
+        transferDRD(msg.sender, cost*95/100);
+    }
+
+    function setState(uint user_id,uint _state) public {
+        if (_state == 0)
+            users[userList[user_id]].state = Status.INACTIVE;
+        if (_state == 1)
+            users[userList[user_id]].state = Status.RIDER;
+        if (_state == 2)
+            users[userList[user_id]].state = Status.DRIVER;
+        if (_state == 3)
+            users[userList[user_id]].state = Status.ONRIDE;
+        
     }
 }
