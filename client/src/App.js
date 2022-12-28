@@ -1,14 +1,8 @@
 import { TransactionContext } from './context/TransactionContext';
 import React,{ useContext } from 'react';
 import axios from 'axios';
+import Connect from './components/Connect';
 const App = () => {
-  const {driveRequest} = useContext(TransactionContext);
-
-  const handledriveRequest = () => {
-    console.log(typeof(driveRequest));
-    driveRequest();
-  }
-
   const Send_post_Request = () => {
 
     const data = {
@@ -35,21 +29,19 @@ const App = () => {
         console.log(error);
       })
   }
+  const {driveRequest,rideRequest,showAllRequests} = useContext(TransactionContext);
+  const handlerideRequest = () => {
+    rideRequest(30);
+  }
+
+  
   return (
     <div className="App">
-      {/* <button onClick={async() =>{
-        if(window.ethereum) {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const signer = provider.getSigner();
-
-          const sign = await signer.signMessage("Welcome to deride");
-          console.log(sign,signer.getAddress())
-        }
-      }
-      }>Connect Wallet</button> */}
-
-      <button onClick={handledriveRequest}>Drive Request</button>
+      <Connect/>
+      <button onClick={driveRequest}>Drive Request</button>
       <button onClick={Send_post_Request}>POSt data</button>
+      <button onClick={handlerideRequest}>Ride Request</button>
+      <button onClick={showAllRequests}>Show ALL Requests</button>
     </div>
   );
 }
