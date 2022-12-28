@@ -5,7 +5,7 @@ import TokenContractABI from '../abi/DerideToken.json'
 
 export const TransactionContext= React.createContext('');
 
-const DerideContractAddress = '0x483946bF5e0a2870c9095f1551B8cFdAcc20FF32';
+const DerideContractAddress = '0xdA5641db4F9a32ff0aE1DD3a275401CeE617dBef';
 const TokenContractAddress = '0xE00A35b05A6ffc322dd69f8a2FDeeE56DAF4bA91';
 const { ethereum }= window;
 
@@ -49,6 +49,8 @@ export const TransactionProvider =({ children })=>{
         try {
             if(!ethereum) return alert("Please install Metamask");
 
+            cost = cost*10**18;
+            cost = cost.toString();
             const tokenContract = getTokenContract();
             const transact = await tokenContract.approve(DerideContractAddress,cost);
             const receipt = await transact.wait()
@@ -67,6 +69,75 @@ export const TransactionProvider =({ children })=>{
             console.log("Completed");
         } catch (error) {
             console.log(error);
+            throw new Error("No Ethereum object");
+        }
+    }
+
+    const showAllRequests = async () => {
+        try {
+            if(!ethereum) return alert("Please install Metamask");
+            const contract = getDerideContract();
+
+            const transact= await contract.showAllRequests();
+            const reciept = await transact.wait();
+            contract.on("RiderDetails", (RiderDetails,event) => {
+                console.log(event);
+                console.log('hii');
+                console.log(event.args.WaitingRiders);
+            });
+            // currentAccount, to, value, event
+
+        } catch (error) {
+            console.log(error);
+
+            throw new Error("No Ethereum object");
+        }
+    }
+
+    const acceptRequest = async (riderNumber) => {
+        try {
+            if(!ethereum) return alert("Please install Metamask");
+            const contract = getDerideContract();
+            const transact= await contract.acceptRequest(riderNumber);
+            const reciept = await transact.wait();
+
+        } catch (error) {
+            console.log(error);
+
+            throw new Error("No Ethereum object");
+        }
+    }
+
+    const markRideCompleted = async (riderNumber,cost) => {
+        try {
+            if(!ethereum) return alert("Please install Metamask");
+
+            cost = cost*10**18;
+            cost = cost.toString();
+            const contract = getDerideContract();
+            const transact= await contract.markRideCompleted(riderNumber,cost);
+            const reciept = await transact.wait();
+
+        } catch (error) {
+            console.log(error);
+
+            throw new Error("No Ethereum object");
+        }
+    }
+
+    const cancelRideRequest = async(cost) => {
+        try {
+            if(!ethereum) return alert("Please install Metamask");
+
+            cost = cost*10**18;
+            cost = cost.toString();
+            const contract = getDerideContract();
+            const transact= await contract.cancelRideRequest(cost);
+            const reciept = await transact.wait();
+
+        } catch (error) {
+            console.log(error);
+
             throw new Error("No Ethereum object");
         }
     }
@@ -109,27 +180,6 @@ export const TransactionProvider =({ children })=>{
         }
     }
 
-    const showAllRequests = async () => {
-        try {
-            if(!ethereum) return alert("Please install Metamask");
-            const contract = getDerideContract();
-
-            const transact= await contract.showAllRequests();
-            const reciept = await transact.wait();
-            contract.on("RiderDetails", (RiderDetails,event) => {
-                console.log(event);
-                console.log('hii');
-                console.log(event.args.WaitingRiders);
-            });
-            // currentAccount, to, value, event
-
-        } catch (error) {
-            console.log(error);
-
-            throw new Error("No Ethereum object");
-        }
-    }
-
     
 
     useEffect(()=>{
@@ -138,7 +188,8 @@ export const TransactionProvider =({ children })=>{
     },[]);
 
     return(
-            <TransactionContext.Provider value={{ connectWallet, currentAccount,driveRequest,rideRequest,showAllRequests}}>
+            <TransactionContext.Provider value={{ connectWallet, currentAccount,driveRequest,rideRequest,showAllRequests,
+                acceptRequest,markRideCompleted,cancelRideRequest}}>
                 {children}
             </TransactionContext.Provider>
         )
