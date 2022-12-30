@@ -35,11 +35,17 @@ function Homepage() {
         console.log(error);
       });
   };
-  
+
   return (
     <div className="App">
-      <Connect />
-      <button onClick={Send_post_Request}>POSt data</button>
+      <div className="flex flex-row justify-around">
+        <button
+          className="flex flex-row items-center bg-honey-gold p-1 pr-4 pl-4 text-white rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100"
+          onClick={Send_post_Request}
+        >
+          POSt data
+        </button>
+      </div>
     </div>
   );
 }

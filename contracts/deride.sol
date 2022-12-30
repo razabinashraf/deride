@@ -7,7 +7,7 @@ contract Deride{
 
     address private drdTokenAddress;
 
-    event RiderDetails(uint[] WaitingRiders);
+    event RiderDetails(address[] WaitingRiders);
     // event used to inform rider that he/she has been picked up
     event RiderPicked(uint riderNumber); 
     // Struct used to store all information related to a user
@@ -16,7 +16,7 @@ contract Deride{
         uint number;
         Status state;
     }
-    uint[] WaitingRiders;
+    address[] WaitingRiders;
     // Maps user ethrium address to user struct
     mapping (address => user) public users;
     // List of user adress
@@ -77,7 +77,7 @@ contract Deride{
         delete WaitingRiders;
         for (uint i=0; i<userList.length; i++) {
             if (users[userList[i]].state == Status.RIDER){
-                WaitingRiders.push(users[userList[i]].number);
+                WaitingRiders.push(userList[i]);
             }
         }
         emit RiderDetails(WaitingRiders);

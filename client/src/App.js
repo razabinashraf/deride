@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import Driverpage from "./pages/Driverpage";
 import Riderpage from "./pages/Riderpage";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   const Send_post_Request = () => {
@@ -55,11 +56,17 @@ const App = () => {
     // </div>
 
     <Router>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/rider" element={<Riderpage />} />
-        <Route path="/driver" element={<Driverpage />} />
-      </Routes>
+      <div className="flex bg-[#1f1c1c] ">
+        <Navbar />
+        <div className="w-full">
+          <Connect />
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/rider" element={<Riderpage />} />
+            <Route path="/driver" element={<Driverpage />} />
+          </Routes>
+        </div>
+      </div>
     </Router>
   );
 };
