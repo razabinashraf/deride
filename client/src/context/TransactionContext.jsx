@@ -4,13 +4,16 @@ import axios from "axios";
 import DerideContractABI from '../abi/Deride.json';
 import TokenContractABI from '../abi/DerideToken.json'
 
+
+// This context is responsible for all the state variables to be used in the react app
 export const TransactionContext= React.createContext('');
 
+// Contract address of deride and DRDtoken.
 const DerideContractAddress = '0x2A7D614B0CEB2ea138B1faA0022DDE4D54f69f6a';
 const TokenContractAddress = '0xC113cD5B7a5fc29e0aCCF24082DE2064Da4BCE01';
 const { ethereum }= window;
 
-
+// Deride contract is responsible for handling all the transactions
 const getDerideContract= ()=>{
     const provider= new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
@@ -19,6 +22,7 @@ const getDerideContract= ()=>{
     return TransactionContract;
 }
 
+// Token contract is a simple ERC20 contract that is used in deride application
 const getTokenContract =() => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     provider.pollingInterval =1
@@ -35,8 +39,8 @@ export const TransactionProvider =({ children })=>{
     const [source_long,setSourceLong] = useState(0);
     const [destination_lat,setDestinationLat] = useState(0);
     const [destination_long,setDestinationLong] = useState(0);
-    const [waitingRidersAddress,setWaitingRidersAddress] = useState(['0x7C66Cbc9354130451aCf99aEBbb7399efED94913','0x3FF4f1aDf182f0F959C12A356aBae3680fF36Caf']);
-    const [waitingRidersLocation,setWaitingRiderslocation] = useState([]);
+    const [waitingRidersAddress,setWaitingRidersAddress] = useState(['0x7C66Cbc9354130451aCf99aEBbb7399efED94913','0x3FF4f1aDf182f0F959C12A356aBae3680fF36Caf',]);
+    const [waitingRidersLocation,setWaitingRidersLocation] = useState([]);
     const driveRequest= async ()=>{
         try {
             if(!ethereum) return alert("Please install Metamask");
@@ -50,11 +54,19 @@ export const TransactionProvider =({ children })=>{
         }
     }
 
+    //When a rider requests a new ride
     const rideRequest= async ()=>{
+
+        // The cost of travel is calculated by getting the distance betwwen two locations and multiplying by 100
+        // This is a temporary solution and can be replaced with better algorithms in the future
         let cost = getDistance(source_lat,source_long,destination_lat,destination_long)*100;
         cost = cost.toString();
         console.log('Cost:',cost);
-        cost = ethers.utils.parseUnits(cost,"ether")
+        cost = ethers.utils.parseUnits(cost,"ether");
+
+        // Two contract interactions are needed to complete this function(done in two try catch blocks)
+        // 1. Get approval from rider to use his DRD tokens by the contract.
+        // 2. Transfer DRD tokens from account of rider to the contract
         try {
             if(!ethereum) return alert("Please install Metamask");
             const tokenContract = getTokenContract();
@@ -79,26 +91,31 @@ export const TransactionProvider =({ children })=>{
         }
     }
 
+
+    //Function that triggers a request in contract which will in turn emit an event with details of 
+    //all pending riders waiting for a ride
     const showAllRequests = async () => {
         try {
             if(!ethereum) return alert("Please install Metamask");
             const contract = getDerideContract();
 
-            // const transact= await contract.showAllRequests();
-            // const receipt = await transact.wait();
-            // await new Promise(res => setTimeout(res, 8000));
-            // console.log(receipt);
-            // contract.on("RiderDetails", (RiderDetails,event) => {
-            //     console.log(event);
-            //     console.log('hii');
-            //     console.log(event.args.WaitingRiders);
-            //     event.args.WaitingRiders.forEach(item => console.log(item['_hex']));
-            //     setWaitingRiders(event.args.WaitingRiders);
-            // });
+            const transact= await contract.showAllRequests();
+            const receipt = await transact.wait();
+            //await new Promise(res => setTimeout(res, 8000));
+            console.log(receipt);
+            contract.on("RiderDetails", (address) => {
+                console.log(address);
+                console.log('hii');
+            });
+
+            // TODO: Move the rest of the code in this block (excluding catch, obviosly) to run when event is recieved.
             let Location = [];
-            //waitingRidersAddress.forEach(item=> Location.push(fetchLocationInfo(item)));
-            waitingRidersAddress.forEach(item=>fetchLocationInfo(item.toLowerCase));
-            setWaitingRiderslocation(Location);
+            waitingRidersAddress.forEach(async (item) => Location.push((await fetchLocationInfo(item.toLowerCase()))));
+            //FIXME: The below line is set to manually wait for above statement to finish. Will
+            // need to find some way to make proper use of async/await
+            await new Promise(res => setTimeout(res, 8000));
+            console.log(Location);
+            setWaitingRidersLocation(Location);
 
         } catch (error) {
             console.log(error);
@@ -107,6 +124,7 @@ export const TransactionProvider =({ children })=>{
         }
     }
 
+    //Function to accept a ride request from any particular rider by the driver
     const acceptRequest = async (riderNumber) => {
         try {
             if(!ethereum) return alert("Please install Metamask");
@@ -122,6 +140,8 @@ export const TransactionProvider =({ children })=>{
         }
     }
 
+    // Function to mark a ride as completed by the driver
+    // This will automatically transfer 85% of the travel fare to the driver
     const markRideCompleted = async (riderNumber,cost) => {
         try {
             if(!ethereum) return alert("Please install Metamask");
@@ -140,6 +160,9 @@ export const TransactionProvider =({ children })=>{
         }
     }
 
+    //Function to cancel an already created ride request 
+    //It will transfer 95% of the travel fare back to the rider.
+    //5% of the cost will be levied as penalty
     const cancelRideRequest = async(cost) => {
         try {
             if(!ethereum) return alert("Please install Metamask");
@@ -157,10 +180,9 @@ export const TransactionProvider =({ children })=>{
         }
     }
 
+    //Function to fetch source and destination location of a rider from MongoDB.
     const fetchLocationInfo = async (_address) => {
         let response_data = '';
-        console.log(_address);
-        console.log("currrent account", currentAccount);
         const data = {
           collection: "user_details",
           database: "deride",
@@ -178,23 +200,24 @@ export const TransactionProvider =({ children })=>{
     
         await axios
           .post(
-            "https://cors-anywhere.herokuapp.com/https://data.mongodb-api.com/app/data-wzgqf/endpoint/data/v1/action/findOne",
+            "https://data.mongodb-api.com/app/data-wzgqf/endpoint/data/v1/action/findOne",
             data,
             {
               headers: headers,
             }
           )
-          .then((response) => {
-            console.log(response);
+          .then(async (response) => {
             response_data = response.data.document;
+            console.log(response_data);
           })
           .catch((error) => {
             console.log(error);
           });
-          console.log('before returning data from fetch location')
           return response_data;
     };
 
+    // Function that creates a record of driver in MongoDB with details of his source and destination locations
+    // If it already exists, it will update the data.
     const updateLocationInfo = () => {
     const data = {
         collection: "user_details",
@@ -231,6 +254,7 @@ export const TransactionProvider =({ children })=>{
         });
     };
     
+    // Return distance between two points
     function getDistance(x1, y1, x2, y2){
         let y = x2 - x1;
         let x = y2 - y1;

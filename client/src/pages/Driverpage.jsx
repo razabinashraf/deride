@@ -10,12 +10,12 @@ function Driverpage() {
     markRideCompleted(1, 30);
   };
 
-  const handleAcceptRequest = () => {
-    acceptRequest(1);
+  const handleAcceptRequest = (id) => {
+    acceptRequest(id);
   };
 
-  const reload = () => {
-    console.log("reload");
+  const delay = (delayInms) => {
+    return new Promise(resolve => setTimeout(resolve, delayInms));
   }
   return (
     <div>
@@ -44,7 +44,6 @@ function Driverpage() {
         >
           Accept request
         </button><br></br>
-        <button onClick={reload}>Reload</button>
         </div>
         <div>
           <table>
@@ -53,15 +52,20 @@ function Driverpage() {
                 <th>Address of Rider</th>
                 <th>Source </th>
                 <th>Destination</th>
+                <th>Select Rider</th>
               </tr>
             </thead>
             <tbody>
-              {waitingRidersLocation.map(item => {
+              {
+              waitingRidersLocation.map(item => {
                 return (
-                  <tr >
+                  <tr key={item.address}>
                     <td>{ item.address}</td>
                     <td>{ item.source_lat}</td>
                     <td>{ item.destination_lat}</td>
+                    <td><button onClick={() => {handleAcceptRequest(1)}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                        Accept
+                      </button></td>
                   </tr>
                 );
               })}
