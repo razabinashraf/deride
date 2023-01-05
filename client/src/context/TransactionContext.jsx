@@ -9,8 +9,8 @@ import TokenContractABI from '../abi/DerideToken.json'
 export const TransactionContext= React.createContext('');
 
 // Contract address of deride and DRDtoken.
-const DerideContractAddress = '0x2A7D614B0CEB2ea138B1faA0022DDE4D54f69f6a';
-const TokenContractAddress = '0xC113cD5B7a5fc29e0aCCF24082DE2064Da4BCE01';
+const DerideContractAddress = '0xD236e82Fc2BE69c53bd5Eb2f96053048d8dcd558';
+const TokenContractAddress = '0xeED26009F84CFAaa0ca5Cf4c76ef5D408e7897A4';
 const { ethereum }= window;
 
 // Deride contract is responsible for handling all the transactions
@@ -71,7 +71,7 @@ export const TransactionProvider =({ children })=>{
             if(!ethereum) return alert("Please install Metamask");
             const tokenContract = getTokenContract();
             const transact = await tokenContract.approve(DerideContractAddress,cost);
-            //console.log(transact);
+            console.log(transact);
             const receipt = await transact.wait()
             //console.log(receipt);
         } catch (error) {
@@ -84,7 +84,7 @@ export const TransactionProvider =({ children })=>{
             const derideContract = getDerideContract();
             const derideTransact= await derideContract.rideRequest(cost);
             const transact = await derideTransact.wait();
-            //console.log(transact);
+            console.log(transact);
         } catch (error) {
             console.log(error);
             throw new Error("No Ethereum object");
@@ -240,7 +240,7 @@ export const TransactionProvider =({ children })=>{
 
     axios
         .post(
-        "https://cors-anywhere.herokuapp.com/https://data.mongodb-api.com/app/data-wzgqf/endpoint/data/v1/action/updateOne",
+        "https://data.mongodb-api.com/app/data-wzgqf/endpoint/data/v1/action/updateOne",
         data,
         {
             headers: headers,

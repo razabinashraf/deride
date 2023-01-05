@@ -6,24 +6,25 @@ const Connect= ()=>{
     const{ connectWallet, currentAccount } = useContext(TransactionContext);
 
     return(
-        <div className="w-full">
-            <div>
-                <div className="relative m-10 text-2xl bg-honey-brown text-white h-[72px] font-semibold  rounded-xl  p-5 pr-8">
-                    
-                    {!currentAccount&&(<h1 className="absolute text-honey-gold">Wallet: 0x00000...</h1>)}
-                    {currentAccount&&(<h1 className="absolute text-honey-gold">Wallet: {currentAccount}</h1>)}
+                <div className="w-full justify-between flex bg-gray-200 rounded-xl mb-10 p-5 pr-8">
+                    {!currentAccount&&(
+                    <div>
+                        <h1 className=" text-xl font-semibold text-gray-600">Wallet:</h1><p> 0x00000...</p>
+                    </div>)}
+                    {currentAccount&&(
+                    <div>
+                        <h1 className=" text-xl font-semibold text-gray-600">Wallet:</h1> 
+                        <p className="text-gray-400">{currentAccount}</p>
+                    </div>)}
 
-                    <div className="flex justify-end">
+                    <div className=" text-white">
                         
-                        {!currentAccount&&(<button type="button" onClick={connectWallet} className="flex flex-row items-center bg-honey-gold p-1 pr-4 pl-4 rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100">Connect</button>)}
+                        {!currentAccount&&(<button type="button" onClick={connectWallet} className="flex flex-row items-center bg-red-400 p-1 pr-4 pl-4 rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100">Connect</button>)}
 
-                        {currentAccount&&(<button type="button" onClick={connectWallet} className="flex flex-row items-center bg-honey-gold p-1 pr-4 pl-4 rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100">Connected</button>)}
+                        {currentAccount&&(<button type="button" onClick={connectWallet} className="flex flex-row items-center bg-green-400 p-1 pr-4 pl-4 rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100">Connected</button>)}
 
                     </div>
                 </div>
-            </div>
-        </div>
-            
     )
 }
 export default Connect;

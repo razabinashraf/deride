@@ -19,34 +19,28 @@ function Driverpage() {
   }
   return (
     <div>
-      <div className="flex flex-row justify-around">
+      <div className="flex flex-row justify-around mb-4">
         <button
-          className="flex flex-row items-center bg-honey-gold p-1 pr-4 pl-4 text-white rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100"
+          className="flex flex-row items-center border-solid border-b-2 p-1 pr-4 pl-4 hover:border-blue-300 text-gray cursor-pointer hover:bg-opacity-80 transition duration-100"
           onClick={driveRequest}
         >
           Drive Request
         </button>
         <button
-          className="flex flex-row items-center bg-honey-gold p-1 pr-4 pl-4 text-white rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100"
+          className="flex flex-row items-center border-solid border-b-2 p-1 pr-4 pl-4 hover:border-blue-300 text-gray cursor-pointer hover:bg-opacity-80 transition duration-100"
           onClick={showAllRequests}
         >
           Show ALL Requests
         </button>
         <button
-          className="flex flex-row items-center bg-honey-gold p-1 pr-4 pl-4 text-white rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100"
+          className="flex flex-row items-center border-solid border-b-2 p-1 pr-4 pl-4 hover:border-blue-300 text-gray cursor-pointer hover:bg-opacity-80 transition duration-100"
           onClick={handleMarkRideCompleted}
         >
           Mark Ride Completed
-        </button>
-        <button
-          className="flex flex-row items-center bg-honey-gold p-1 pr-4 pl-4 text-white rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100"
-          onClick={handleAcceptRequest}
-        >
-          Accept request
         </button><br></br>
         </div>
         <div>
-          <table>
+          <table className="w-full border">
             <thead>
               <tr>
                 <th>Address of Rider</th>

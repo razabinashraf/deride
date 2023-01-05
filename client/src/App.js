@@ -56,9 +56,9 @@ const App = () => {
     // </div>
 
     <Router>
-      <div className="flex bg-[#1f1c1c] ">
+      <div className="flex">
         <Navbar />
-        <div className="w-full">
+        <div className="w-full p-10">
           <Connect />
           <Routes>
             <Route path="/" element={<Homepage />} />

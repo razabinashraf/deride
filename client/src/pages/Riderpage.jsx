@@ -44,13 +44,14 @@ function Riderpage() {
 
 
   return (
-    <div className="flex flex-row justify-around">
-      <div className="flex py-[133px] flex-col flex-wrap justify-content items-center">               
-                    <input className="appearance-none bg-opacity-5 border-b-honey-gold border-b-2 w-[500px] text-white mr-3 py-1 px-2 text-xl leading-tight m-2 bg-white focus:outline-none rounded-lg" type="text" placeholder="Source Latitude" name="source_lat" onChange={handleChangeSourceLat}/>
-                    <input className="appearance-none bg-opacity-5 border-b-honey-gold border-b-2 w-[500px] text-white mr-3 py-1 px-2 text-xl leading-tight m-2 bg-white focus:outline-none rounded-lg" type="text" placeholder="Source Logitude" name="source_long" onChange={handleChangeSourceLong}/><br></br><br></br>
-                    <input className="appearance-none bg-opacity-5 border-b-honey-gold border-b-2 w-[500px] text-white mr-3 py-1 px-2 text-xl leading-tight m-2 bg-white focus:outline-none rounded-lg" type="text" placeholder="Destination Latitude" name="destination_lat" onChange={handleChangeDestinationLat}/>
-                    <input className="appearance-none bg-opacity-5 border-b-honey-gold border-b-2 w-[500px] text-white mr-3 py-1 px-2 text-xl leading-tight m-2 bg-white focus:outline-none rounded-lg" type="text" placeholder="Destination Logitude" name="destination_long" onChange={handleChangeDestinationLong}/><br></br><br></br>
-                </div>
+    <div className="">
+      <div className="flex py-24 flex-col flex-wrap justify-content items-center">               
+                    <input className="appearance-none border-b-2 w-[500px] text-gray-600 mr-3 py-1 px-2 m-2 bg-white focus:outline-none" type="text" placeholder="Source Latitude" name="source_lat" onChange={handleChangeSourceLat}/>
+                    <input className="appearance-none border-b-2 w-[500px] text-gray-600 mr-3 py-1 px-2 m-2 bg-white focus:outline-none" type="text" placeholder="Source Logitude" name="source_long" onChange={handleChangeSourceLong}/><br></br><br></br>
+                    <input className="appearance-none border-b-2 w-[500px] text-gray-600 mr-3 py-1 px-2 m-2 bg-white focus:outline-none" type="text" placeholder="Destination Latitude" name="destination_lat" onChange={handleChangeDestinationLat}/>
+                    <input className="appearance-none border-b-2 w-[500px] text-gray-600 mr-3 py-1 px-2 m-2 bg-white focus:outline-none" type="text" placeholder="Destination Logitude" name="destination_long" onChange={handleChangeDestinationLong}/><br></br><br></br>
+      </div>
+      <div className="flex flex-row justify-around">
       <button
         className="flex flex-row items-center bg-honey-gold p-1 pr-4 pl-4 text-white rounded-xl cursor-pointer hover:bg-opacity-80 transition duration-100"
         onClick={handleRideRequest}
@@ -63,6 +64,7 @@ function Riderpage() {
       >
         Cancel Request
       </button>
+      </div>
     </div>
   );
 }
