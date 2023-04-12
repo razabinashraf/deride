@@ -3,13 +3,13 @@ import "./drdtoken.sol";
 
 contract Deride{
     // Stores the status of the user
-    enum Status {INACTIVE, RIDER, DRIVER,ONRIDE}
+    enum Status {INACTIVE, RIDER, DRIVER, ONRIDE}
 
     address private drdTokenAddress;
 
     event RiderDetails(address[] WaitingRiders);
     // event used to inform rider that he/she has been picked up
-    event RiderPicked(uint riderNumber); 
+    event RiderPicked(uint riderNumber);
     // Struct used to store all information related to a user
     struct user{
         bool isUser;

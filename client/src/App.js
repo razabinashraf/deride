@@ -47,14 +47,6 @@ const App = () => {
   };
 
   return (
-    // <div className="App">
-    //   <Connect/>
-    //   <button onClick={driveRequest}>Drive Request</button>
-    //   <button onClick={Send_post_Request}>POSt data</button>
-    //   <button onClick={handlerideRequest}>Ride Request</button>
-    //   <button onClick={showAllRequests}>Show ALL Requests</button>
-    // </div>
-
     <Router>
       <div className="flex">
         <Navbar />
