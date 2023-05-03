@@ -38,7 +38,7 @@ function Riderpage() {
   }
 
   const handleRideRequest = async() => {
-    updateLocationInfo();
+    //updateLocationInfo();
     rideRequest();
   }
 
