@@ -13,6 +13,7 @@ const DerideContractAddress = '0xD236e82Fc2BE69c53bd5Eb2f96053048d8dcd558';
 const TokenContractAddress = '0xeED26009F84CFAaa0ca5Cf4c76ef5D408e7897A4';
 const { ethereum }= window;
 
+
 // Deride contract is responsible for handling all the transactions
 const getDerideContract= ()=>{
     const provider= new ethers.providers.Web3Provider(ethereum);
@@ -42,9 +43,12 @@ export const TransactionProvider =({ children })=>{
     const [waitingRidersAddress,setWaitingRidersAddress] = useState(['0x7C66Cbc9354130451aCf99aEBbb7399efED94913','0x3FF4f1aDf182f0F959C12A356aBae3680fF36Caf',]);
     const [waitingRidersLocation,setWaitingRidersLocation] = useState([]);
     const driveRequest= async ()=>{
+        console.log("drive")
         try {
+            console.log('hii')
             if(!ethereum) return alert("Please install Metamask");
             const contract = getDerideContract();
+            console.log(contract);
             const transact= await contract.driveRequest();
             console.log(transact);
         } catch (error) {

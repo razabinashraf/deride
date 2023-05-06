@@ -1,12 +1,13 @@
-pragma solidity 0.8.17;
+pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./drdtoken.sol";
+import "hardhat/console.sol";
 
 
 
 contract Deride{
     // Stores the status of the user
-    enum Status {INACTIVE, RIDER, DRIVER, ONRIDE}
+    enum Status {INACTIVE, RIDER, DRIVER,ONRIDE}
 
     address private drdTokenAddress;
     
@@ -18,6 +19,7 @@ contract Deride{
         int256 lat;
         int256 long;
     }
+    event RiderPicked(uint riderNumber); 
     // Struct used to store all information related to a user
     struct user{
         bool isUser;
@@ -139,7 +141,6 @@ contract Deride{
         }
      emit RiderDetails(WaitingRiders);
     }
-
     
 
 
@@ -218,5 +219,23 @@ function getWaitingRiders() public view returns (address[] memory, coordinates[]
         if (_state == 3)
             users[userList[user_id]].state = Status.ONRIDE;
         
+    }
+
+    function distributeTokens() external payable{
+        DerideToken drd = DerideToken(drdTokenAddress);
+        uint256 totalAmount = drd.balanceOf(address(this));
+        uint256 totalSupply = drd.totalSupply(); // Get the total supply of the ERC20 token
+        uint256 balance; // Declare a variable to hold the balance of each holder
+        console.log("total supply: %s, total amount: %s", totalSupply, totalAmount);
+        
+
+        for (uint256 i = 0; i < userList.length; i++) {
+            address holder = userList[i]; // Get the address of each holder
+            balance = drd.balanceOf(holder); // Get the balance of each holder
+            uint256 amountToSend = (balance * totalAmount)/ totalSupply; // Calculate the amount of tokens each holder should receive
+            console.log("balnce*amount: %s,  balance/supply: %s", balance * totalAmount, balance/totalSupply);
+            console.log("Holder: %s, Balance: %s, Amount: %s", holder, balance,amountToSend);
+            drd.transfer(holder, amountToSend);
+        }
     }
 }
