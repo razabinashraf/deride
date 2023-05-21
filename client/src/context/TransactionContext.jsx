@@ -9,8 +9,8 @@ import TokenContractABI from '../abi/DerideToken.json'
 export const TransactionContext= React.createContext('');
 
 // Contract address of deride and DRDtoken.
-const DerideContractAddress = '0xD236e82Fc2BE69c53bd5Eb2f96053048d8dcd558';
-const TokenContractAddress = '0xeED26009F84CFAaa0ca5Cf4c76ef5D408e7897A4';
+const DerideContractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
+const TokenContractAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
 const { ethereum }= window;
 
 

@@ -9,9 +9,9 @@ contract Deride{
     // Stores the status of the user
     enum Status {INACTIVE, RIDER, DRIVER,ONRIDE}
 
-    address private drdTokenAddress;
+    address public drdTokenAddress;
     
-    event RiderDetails( RiderInfo[] WaitingRiders);
+    event RiderDetailS( RiderInfo[] WaitingRiders);
     // event used to inform rider that he/she has been picked up
     event RiderPicked(uint riderNumber);
         // Used to store gegraphical coordinates of a user
@@ -19,7 +19,12 @@ contract Deride{
         int256 lat;
         int256 long;
     }
-    event RiderPicked(uint riderNumber); 
+
+    struct RiderInfo {
+    address riderAddress;
+    coordinates pickupLocation;
+    coordinates dropoffLocation;
+    }
     // Struct used to store all information related to a user
     struct user{
         bool isUser;
@@ -29,12 +34,12 @@ contract Deride{
         coordinates dropoff;
         coordinates DriverLocation;
     }
-    RiderInfo[] public WaitingRiders;
-    
     // Maps user ethrium address to user struct
     mapping (address => user) public users;
     // List of user adress
     address [] public userList;
+
+    uint public WaitingRidersCount = 0;
     
     function transferDRD(address to,uint amount)
         public
@@ -53,7 +58,7 @@ contract Deride{
         drdTokenAddress = DRDContractAddress;
     }
 
-    function driveRequest() public{
+    function driveRequest(int256[] memory location) public{
         // Function used to update/add user details when user signs on to the application as driver
         
         if(users[msg.sender].isUser == false){
@@ -64,12 +69,10 @@ contract Deride{
                 state: Status.DRIVER,
                 pickup: coordinates({lat: 0, long: 0}),
                 dropoff: coordinates({lat: 0, long: 0}),
-                DriverLocation: coordinates({lat: 0, long: 0})
+                DriverLocation : coordinates({lat: location[0], long: location[1]})
                 });
         }else{
             users[msg.sender].state = Status.DRIVER;
-            users[msg.sender].pickup = coordinates({lat: 0, long: 0});
-            users[msg.sender].dropoff = coordinates({lat: 0, long: 0});
             users[msg.sender].DriverLocation= coordinates({lat: 0, long: 0});
         }
     }
@@ -94,8 +97,50 @@ contract Deride{
             users[msg.sender].dropoff = coordinates({lat: drop[0], long: drop[1]});
 
         }
+        WaitingRidersCount += 1;
         drd.transferFrom(msg.sender, address(this), cost);
     }
+
+    // function showAllRequests(int256[] memory location) public {
+    // // Returns list of waiting riders to a driver
+    //     users[msg.sender].DriverLocation = coordinates({lat: location[0], long: location[1]});
+    //     require(users[msg.sender].isUser == true, "Need to be a user to select rider");
+    //     require(users[msg.sender].state == Status.DRIVER, "User needs to be in driver mode to pick rider");
+    //     delete WaitingRiders;
+    //     for (uint i=0; i<userList.length; i++) {
+    //         if (users[userList[i]].state == Status.RIDER && isWithin10km(users[msg.sender].DriverLocation,users[userList[i]].pickup)==true){
+    //             WaitingRiders.push(RiderInfo({
+    //             riderAddress: userList[i],
+    //             pickupLocation: users[userList[i]].pickup,
+    //             dropoffLocation: users[userList[i]].dropoff
+    //         }));
+        
+    //         }
+    //     }
+    // return WaitingRiders;
+    // }
+
+    function showAllRequests() public view returns (RiderInfo[] memory){
+        // returns list of waiting riders to a driver
+        
+        require(users[msg.sender].isUser==true, "Need to be a user to select rider");
+        require(users[msg.sender].state==Status.DRIVER, "User needs to be in driver mode to pick rider");
+        uint length =  userList.length;
+        console.log("length: %s", length);
+        uint index = 0; 
+        RiderInfo[] memory WaitingRiders = new RiderInfo[](WaitingRidersCount);
+        for (uint i = 0; i < length; i++) {
+            if (users[userList[i]].state == Status.RIDER && isWithin10km(users[msg.sender].DriverLocation,users[userList[i]].pickup)==true) {
+                console.log("i: %s, index: %s",i,index);
+                WaitingRiders[index].riderAddress = userList[i];
+                WaitingRiders[index].pickupLocation = users[userList[i]].pickup;
+                WaitingRiders[index].dropoffLocation = users[userList[i]].dropoff;
+                index += 1;
+            }
+        }
+        return WaitingRiders;
+    }
+
     function isWithin10km(coordinates memory DriverLocation, coordinates memory pickup) public pure returns (bool) {
         int256 distance = calculateDistance(DriverLocation.lat, DriverLocation.long, pickup.lat, pickup.long);
         if (distance <= int256(10)) { // 10 km in meters
@@ -115,69 +160,6 @@ contract Deride{
         return int256(distance);
     }
     
-    struct RiderInfo {
-    address riderAddress;
-    coordinates pickupLocation;
-    coordinates dropoffLocation;
-}
-
-    
-
-    function showAllRequests(int256[] memory location) public {
-    // Returns list of waiting riders to a driver
-        users[msg.sender].DriverLocation = coordinates({lat: location[0], long: location[1]});
-        require(users[msg.sender].isUser == true, "Need to be a user to select rider");
-        require(users[msg.sender].state == Status.DRIVER, "User needs to be in driver mode to pick rider");
-        delete WaitingRiders;
-        for (uint i=0; i<userList.length; i++) {
-            if (users[userList[i]].state == Status.RIDER && isWithin10km(users[msg.sender].DriverLocation,users[userList[i]].pickup)==true){
-                WaitingRiders.push(RiderInfo({
-                  riderAddress: userList[i],
-                  pickupLocation: users[userList[i]].pickup,
-                  dropoffLocation: users[userList[i]].dropoff
-               }));
-           
-            }
-        }
-     emit RiderDetails(WaitingRiders);
-    }
-    
-
-
-/*function showAllRequests(int256[] memory location) public {
-    // Returns list of waiting riders to a driver
-    users[msg.sender].DriverLocation = coordinates({lat: location[0], long: location[1]});
-    require(users[msg.sender].isUser == true, "Need to be a user to select rider");
-    require(users[msg.sender].state == Status.DRIVER, "User needs to be in driver mode to pick rider");
-    delete waitingRiders;
-    for (uint i=0; i<userList.length; i++) {
-        if (users[userList[i]].state == Status.RIDER && isWithin10km(users[msg.sender].DriverLocation,users[userList[i]].pickup)==true){
-            waitingRiders.push(RiderInfo({
-                riderAddress: userList[i],
-                pickupLocation: users[userList[i]].pickup,
-                dropoffLocation: users[userList[i]].dropoff
-            }));
-            emit RiderDetails(userList[i], users[userList[i]].pickup, users[userList[i]].dropoff);
-        }
-    }
-}
-
-function getWaitingRiders() public view returns (address[] memory, coordinates[] memory, coordinates[] memory) {
-    address[] memory addresses = new address[](waitingRiders.length);
-    coordinates[] memory pickups = new coordinates[](waitingRiders.length);
-    coordinates[] memory dropoffs = new coordinates[](waitingRiders.length);
-    
-    for (uint i = 0; i < waitingRiders.length; i++) {
-        addresses[i] = waitingRiders[i].riderAddress;
-        pickups[i] = waitingRiders[i].pickupLocation;
-        dropoffs[i] = waitingRiders[i].dropoffLocation;
-    }
-    
-    return (addresses, pickups, dropoffs);
-}*/
-
-
-    
     function acceptRequest(uint riderNumber) public{
         require(users[msg.sender].isUser==true, "Need to be a user to select rider");
         require(users[msg.sender].state==Status.DRIVER, "User needs to be in driver mode to pick rider");
@@ -186,6 +168,8 @@ function getWaitingRiders() public view returns (address[] memory, coordinates[]
         
         users[msg.sender].state = Status.ONRIDE;
         users[userList[riderNumber]].state = Status.ONRIDE;
+
+        WaitingRidersCount -= 1;
 
         emit RiderPicked(riderNumber);
     }
@@ -206,6 +190,7 @@ function getWaitingRiders() public view returns (address[] memory, coordinates[]
         users[msg.sender].state = Status.INACTIVE;
 
         //Transferring only 95% of travel cost back to user as penalty.
+        WaitingRidersCount -= 1;
         transferDRD(msg.sender, cost*95/100);
     }
 

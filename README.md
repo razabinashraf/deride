@@ -1,4 +1,3 @@
-# ProjectX_ByRaza
 # Getting Started with Create React App
 # Sample Hardhat Project
 
